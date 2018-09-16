@@ -25,6 +25,10 @@ while 1:
   print ("Quit")
   break
  elif(state == "reqinit"):
+  print "req init recv"
+  storer = open("store.txt","r")
+  state = storer.read()
+  storer.close()
   client_socket.send(bytes(state))
  else:
   storew = open("store.txt","w") 
