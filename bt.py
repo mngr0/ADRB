@@ -12,29 +12,31 @@ server_socket=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
 port = 1
 server_socket.bind(("",port))
 server_socket.listen(1)
- 
-client_socket,address = server_socket.accept()
-store = open("store.txt","r")
-state = store.read()
-store.close()
-print state
-print "Accepted connection from ",address
 while 1:
- state = client_socket.recv(1024)
- if (state == "q"):
-  print ("Quit")
-  break
- elif(state == "reqinit"):
-  print "req init recv"
-  storer = open("store.txt","r")
-  state = storer.read()
-  storer.close()
-  client_socket.send(bytes(state))
- else:
-  storew = open("store.txt","w") 
-  storew.write(state)
-  storew.close()
-  print "wrote: %s" % state
- 
-client_socket.close()
+ client_socket,address = server_socket.accept()
+ store = open("store.txt","r")
+ state = store.read()
+ store.close()
+ print state
+ print "Accepted connection from ",address
+ while 1:
+  state = client_socket.recv(1024)
+  if (state == "q"):
+   print ("Quit")
+   break
+  elif(state == "reqinit"):
+   print "req init recv"
+   storer = open("store.txt","r")
+   state = storer.read()
+   storer.close()
+   client_socket.send(bytes("ini:"+state))
+  elif(state== "logrequest"):
+   client_socket.send(bytes("log:"+"log example"))
+  else:
+   storew = open("store.txt","w") 
+   storew.write(state)
+   storew.close()
+   print "wrote: %s" % state
+ client_socket.close()
+ print "connection lost, return to listen"
 server_socket.close()
